@@ -82,11 +82,21 @@ public class WebController {
     @RequestMapping("/random")
     public String randomPage(Model model, @RequestParam(name = "verseCount", defaultValue = "10") String verseCount) {
         model.addAttribute("appName", appName);
+        boolean isInteger = isInt(verseCount);
+        if (!isInteger) verseCount = "10";
         List<Kjv> verses = randomController.random(Integer.valueOf(verseCount));
 
         List names = retrieveBookNames(verses);
         model.addAttribute("verses", verses);
         model.addAttribute("names", names);
         return "random";
+    }
+    static boolean isInt(String s)
+    {
+        try
+        { int i = Integer.parseInt(s); return true; }
+
+        catch(NumberFormatException er)
+        { return false; }
     }
 }

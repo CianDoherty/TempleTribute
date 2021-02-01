@@ -1,10 +1,17 @@
-<html xmlns:th="http://www.w3.org/1999/xhtml">
-<head><title>Home Page</title></head>
-<body>
-<h1>Hello !</h1>
+<html style="background-color: #55FFFF;" xmlns:th="http://www.w3.org/1999/xhtml">
+<head><title style="text-align: center">Home Page</title></head>
+<body style="text-align: center">
+<h1>God On Tap</h1>
+<div>
+    <img th:src="@{/red_cross.png}" alt="Responsive image"/>
+</div>
 <p>Welcome to <span th:text="${appName}">Our App</span></p>
-<button>See Daily Scripture</button>
-<button>See Random Scripture</button>
-<a href="daily/today">todays reading</a>
+
+<br>
+<input style="text-align: center" type="text" id="qta_field" value="How many verses..."/>
+<a href='' onclick="this.href='random?verseCount='+document.getElementById('qta_field').value">Random reading</a><br>
+<a href="daily">todays reading</a><br>
+<a href="daily?day=tomorrow">tomorrows reading</a><br>
+<a href="daily?day=yesterday">yesterdays reading</a><br>
 </body>
 </html>

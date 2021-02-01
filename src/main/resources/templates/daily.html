@@ -1,11 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html style="background-color: #55FFFF;" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Daily</title>
 </head>
+<button onclick="goBack()">Go Back</button>
+
+<script>
+function goBack() {
+  window.history.back();
+}
+</script>
 <tbody>
-<h1>Here is your daily bible verses</h1>
+<h1>Here are your daily bible verses</h1>
 <tr th:if="${verses.empty}">
     <td colspan="2"> No Verses Available </td>
 </tr>
