@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Random</title>
+</head>
+<tbody>
+<h1>Here is your random bible verses</h1>
+<tr th:if="${verses.empty}">
+    <td colspan="2"> No Verses Available </td>
+</tr>
+<tr th:if="${names.empty}">
+    <td colspan="2"> No Names Available </td>
+</tr>
+<tr th:each="index : ${#numbers.sequence( 0, #arrays.length(verses)-1)}">
+    <br>
+    <td><span th:text="${names[index]}"> Verse </span></td>.
+    <td><span th:text="${verses[index].c}"> Verse </span></td>.
+    <td><span th:text="${verses[index].v}"> Verse </span></td>.
+    <td><span th:text="${verses[index].t}"> Author </span></td>
+</tr>
+</tbody>
+</html>

@@ -1,0 +1,14 @@
+version: '3.3'
+
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./db-init/bible-mysql.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bible
+      MYSQL_USER: root
