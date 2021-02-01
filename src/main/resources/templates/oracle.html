@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html style="background-color: #55FFFF;" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to the Oracle</title>
+</head>
+<button onclick="goBack()">Go Home</button>
+
+<script>
+function goBack() {
+  window.history.back();
+}
+</script>
+<br>Press the button to receive a word from the Oracle
+<body>
+<input type="button"  onclick="location.href='/oracle'" value="Receive word" >
+<input type="button"  onclick="location.href='/oracle?reset=true'" value="Reset" >
+<p><span th:text="${word}"></span></p>
+</body>
+</html>

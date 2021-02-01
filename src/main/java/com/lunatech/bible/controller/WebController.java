@@ -3,6 +3,7 @@ package com.lunatech.bible.controller;
 import com.lunatech.bible.model.KeyEnglish;
 import com.lunatech.bible.model.Kjv;
 import com.lunatech.bible.repository.KeyEnglishTranslator;
+import com.lunatech.bible.service.OracleService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,8 @@ public class WebController {
     private RandomController randomController;
     @Autowired
     private KeyEnglishTranslator keyEnglishTranslator;
+    @Autowired
+    private OracleService oracleController;
 
     public WebController(DailyReadingsController dailyReadingsController) {
         this.dailyReadingsController = dailyReadingsController;
@@ -98,5 +101,18 @@ public class WebController {
 
         catch(NumberFormatException er)
         { return false; }
+    }
+
+    public String oracleString = "";
+    @RequestMapping("/oracle")
+    public String oraclePage(Model model, @RequestParam(name = "reset", defaultValue = "false") boolean reset) {
+        model.addAttribute("appName", appName);
+
+        String word = oracleController.oracle();
+
+        oracleString = oracleString + " " + word;
+        if(reset)oracleString = "";
+        model.addAttribute("word", oracleString);
+        return "oracle";
     }
 }

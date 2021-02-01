@@ -8,10 +8,26 @@
 <p>Welcome to <span th:text="${appName}">Our App</span></p>
 
 <br>
-<input style="text-align: center" type="text" id="qta_field" value="How many verses..."/>
-<a href='' onclick="this.href='random?verseCount='+document.getElementById('qta_field').value">Random reading</a><br>
-<a href="daily">todays reading</a><br>
-<a href="daily?day=tomorrow">tomorrows reading</a><br>
-<a href="daily?day=yesterday">yesterdays reading</a><br>
+<table style="border: 1px solid black; margin-left: auto; margin-right: auto;">
+    <tr style="border: 1px solid black;">
+        <input style="text-align: center" type="text" id="qta_field" value="How many verses..."/>
+        <a href='' onclick="this.href='random?verseCount='+document.getElementById('qta_field').value">Random reading</a><br>
+    </tr>
+    <tr style="border: 1px solid black;">
+        <a href="daily">todays reading</a><br>
+    </tr>
+    <tr style="border: 1px solid black;">
+        <a href="daily?day=tomorrow">tomorrows reading</a><br>
+    </tr>
+    <tr style="border: 1px solid black;">
+        <a href="daily?day=yesterday">yesterdays reading</a><br>
+    </tr>
+    <tr style="border: 1px solid black;">
+        <a href="oracle">Speak to the Oracle</a><br>
+    </tr>
+</table>
+</table>
+
+
 </body>
 </html>
