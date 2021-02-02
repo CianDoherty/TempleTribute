@@ -3,31 +3,32 @@
 <body style="text-align: center">
 <h1>God On Tap</h1>
 <div>
-    <img th:src="@{/red_cross.png}" alt="Responsive image"/>
+    <img th:src="@{/yellow_cross.png}" alt="Responsive image"/>
 </div>
 <p>Welcome to <span th:text="${appName}">Our App</span></p>
-
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+</style>
 <br>
 <table style="border: 1px solid black; margin-left: auto; margin-right: auto;">
-    <tr style="border: 1px solid black;">
-        <input style="text-align: center" type="text" id="qta_field" value="How many verses..."/>
-        <a href='' onclick="this.href='random?verseCount='+document.getElementById('qta_field').value">Random reading</a><br>
+    <tr>
+        <th><input style="text-align: center" type="text" id="qta_field" value="How many verses..."/>
+        <a href='' onclick="this.href='random?verseCount='+document.getElementById('qta_field').value">Random reading</a><br></th>
     </tr>
-    <tr style="border: 1px solid black;">
-        <a href="daily">todays reading</a><br>
+    <tr>
+        <th><a href="daily">todays reading</a><br></th>
     </tr>
-    <tr style="border: 1px solid black;">
-        <a href="daily?day=tomorrow">tomorrows reading</a><br>
+    <tr>
+        <th><a href="daily?day=tomorrow">tomorrows reading</a><br></th>
     </tr>
-    <tr style="border: 1px solid black;">
-        <a href="daily?day=yesterday">yesterdays reading</a><br>
+    <tr>
+        <th><a href="daily?day=yesterday">yesterdays reading</a><br></th>
     </tr>
-    <tr style="border: 1px solid black;">
-        <a href="oracle">Speak to the Oracle</a><br>
+    <tr>
+        <th><a href="oracle">Speak to the Oracle</a><br></th>
     </tr>
 </table>
-</table>
-
-
 </body>
 </html>
