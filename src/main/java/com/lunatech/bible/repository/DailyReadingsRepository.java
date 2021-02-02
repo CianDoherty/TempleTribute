@@ -1,15 +1,15 @@
 package com.lunatech.bible.repository;
 
 import com.lunatech.bible.model.Kjv;
-import org.json.JSONException;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;
@@ -18,7 +18,6 @@ import javax.persistence.TypedQuery;
 import javax.sql.DataSource;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,36 +37,62 @@ public class DailyReadingsRepository {
         this.entityManager = entityManager;
     }
 
+    private static final Logger log = LoggerFactory.getLogger(DailyReadingsRepository.class);
+
     private static final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
 
-    public List<Kjv> retrieveTodaysReading(String bibleVersionID) throws JSONException, SQLException, IOException {
+    public List<Kjv> retrieveTodaysReading() {
+
         Date today = new Date();
 
         String pattern = "yyyy/MM/dd";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
         String dateStr = simpleDateFormat.format(today);
-        return queryVerseList(dateStr);
+
+        List<Kjv> verseList = new ArrayList<>();
+        try {
+            log.info("Attempting query verse List: "+ dateStr);
+            verseList = queryVerseList(dateStr);
+        } catch (Exception e) {
+            log.info("Received Exception during when querying verses: " + e);
+        }
+        return verseList;
     }
 
-    public List<Kjv> retrieveTomorrowsReading() throws IOException {
+    public List<Kjv> retrieveTomorrowsReading() {
         Date tomorow = new Date(new Date().getTime() + MILLIS_IN_A_DAY);
 
         String pattern = "yyyy/MM/dd";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
         String dateStr = simpleDateFormat.format(tomorow);
-        return queryVerseList(dateStr);
+        List<Kjv> verseList = new ArrayList<>();
+        try {
+            log.info("Attempting query verse List: "+ dateStr);
+            verseList = queryVerseList(dateStr);
+        } catch (Exception e) {
+            log.info("Received Exception during send Message: " + e);
+        }
+        return verseList;
     }
 
-    public List<Kjv> retrieveYesterdaysReading() throws IOException {
+    public List<Kjv> retrieveYesterdaysReading() {
         Date yesterday = new Date(new Date().getTime() - MILLIS_IN_A_DAY);
         String pattern = "yyyy/MM/dd";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
         String dateStr = simpleDateFormat.format(yesterday);
 
-        return queryVerseList(dateStr);
+        List<Kjv> verseList = new ArrayList<>();
+        try {
+            log.info("Attempting query verse List: "+ dateStr);
+
+            verseList = queryVerseList(dateStr);
+        } catch (Exception e) {
+            log.info("Received Exception during when querying verses: " + e);
+        }
+        return verseList;
     }
 
     public List<Kjv> queryVerseList(String dateStr) throws IOException {
@@ -80,8 +105,10 @@ public class DailyReadingsRepository {
 
         Element el = doc.select("h1.title-alt").get(0);
         String[] bis = el.text().split("[:, ,\\–,\\-,\\,]");
-//        String[] bis = "Meditations: Hebrews 4:1-5, 11".split("[:, ,\\–,\\-,\\,]");
-        String book = null, chapterStart = null, chapterEnd = null, verseStart = null, verseEnd = null, verseStart2 = null, verseEnd2 = null;
+//       "Meditations: Hebrews 4:1-5, 11".split("[:, ,\\–,\\-,\\,]");
+        String book = null, chapterStart = null, chapterEnd = null,
+                verseStart = null, verseEnd = null,
+                verseStart2 = null, verseEnd2 = null;
         List<Kjv>  responseList = null;
         if (bis.length == 8) {          // Format: Meditations: Hebrews 4:1-5, 11
             book = bis[2];
@@ -102,9 +129,9 @@ public class DailyReadingsRepository {
             queryVerse.setParameter("bookId", bookId);
             queryVerse.setParameter("chapter", chapterStart);
             queryVerse.setParameter("verse", Integer.valueOf(verseStart2));
-            List<Kjv> list1 = (List<Kjv>)queryVerses.getResultList();
-            List<Kjv> list2 = (List<Kjv>)queryVerse.getResultList();
-            responseList = (List<Kjv>) Stream.concat(list1.stream(),list2.stream())
+            List<Kjv> list1 = queryVerses.getResultList();
+            List<Kjv> list2 = queryVerse.getResultList();
+            responseList =  Stream.concat(list1.stream(),list2.stream())
                     .collect(Collectors.toList());
         } else if (bis.length == 6) {   // Format: Meditations: Hebrews 4:1-5
             book = bis[2];
@@ -120,7 +147,7 @@ public class DailyReadingsRepository {
             queryVerse.setParameter("chapter", chapterStart);
             queryVerse.setParameter("verseStart", Integer.valueOf(verseStart));
             queryVerse.setParameter("verseEnd", Integer.valueOf(verseEnd));
-            responseList = (List<Kjv>)queryVerse.getResultList();
+            responseList = queryVerse.getResultList();
         } else if (bis.length == 9) {   // Format: Meditations: Hebrews 4:1-5, 7-9
             book = bis[2];
             chapterStart = bis[3];
@@ -142,9 +169,9 @@ public class DailyReadingsRepository {
             queryVerse2.setParameter("chapter", chapterStart);
             queryVerse2.setParameter("verseStart", Integer.valueOf(verseStart2));
             queryVerse2.setParameter("verseEnd", Integer.valueOf(verseEnd2));
-            List<Kjv> list1 = (List<Kjv>)queryVerse1.getResultList();
-            List<Kjv> list2 = (List<Kjv>)queryVerse2.getResultList();
-            responseList = (List<Kjv>) Stream.concat(list1.stream(),list2.stream())
+            List<Kjv> list1 = queryVerse1.getResultList();
+            List<Kjv> list2 = queryVerse2.getResultList();
+            responseList = Stream.concat(list1.stream(),list2.stream())
                     .collect(Collectors.toList());
         } else if (bis.length == 7) {   // Format: Meditations: Hebrews 7:25–8:6
             book = bis[2];
@@ -161,12 +188,12 @@ public class DailyReadingsRepository {
             queryVerse2.setParameter("chapterEnd", Integer.valueOf(chapterEnd));
             queryVerse1.setParameter("verseStart", Integer.valueOf(verseStart));
             queryVerse2.setParameter("verseEnd", Integer.valueOf(verseEnd));
-            List<Kjv> list1 = (List<Kjv>)queryVerse1.getResultList();
-            List<Kjv> list2 = (List<Kjv>)queryVerse2.getResultList();
-            responseList = (List<Kjv>) Stream.concat(list1.stream(),list2.stream())
+            List<Kjv> list1 = queryVerse1.getResultList();
+            List<Kjv> list2 = queryVerse2.getResultList();
+            responseList = Stream.concat(list1.stream(),list2.stream())
                     .collect(Collectors.toList());
         } else {
-            System.out.println("Unknown format error");
+            log.info("Error caused by unknown format during Jsoup parsing");
         }
         return responseList;
     }

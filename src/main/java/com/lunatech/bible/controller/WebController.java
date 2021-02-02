@@ -4,33 +4,18 @@ import com.lunatech.bible.model.KeyEnglish;
 import com.lunatech.bible.model.Kjv;
 import com.lunatech.bible.repository.KeyEnglishTranslator;
 import com.lunatech.bible.service.OracleService;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.json.*;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
 public class WebController {
-
-//    @Override
-//    public void addViewControllers(ViewControllerRegistry registry) {
-//        registry.addViewController("/home").setViewName("home");
-//        registry.addViewController("/random").setViewName("random");
-//        registry.addViewController("/daily").setViewName("daily");
-//        registry.addViewController("/form").setViewName("form");
-//    }
 
     @Value("${spring.application.name}")
     String appName;
@@ -54,22 +39,22 @@ public class WebController {
         return "home";
     }
     @RequestMapping("/daily")
-    public String dailyPage(Model model, @RequestParam(name = "day", defaultValue = "today") String day) throws JSONException, SQLException, IOException {
+    public String dailyPage(Model model, @RequestParam(name = "day", defaultValue = "today") String day) {
 
         model.addAttribute("appName", appName);
         List<Kjv> verses = null;
         if (day.equals("yesterday")) verses = dailyReadingsController.yesterday();
         else if (day.equals("tomorrow")) verses = dailyReadingsController.tomorrow();
-        else verses = dailyReadingsController.today("de4e12af7f28f599-01");// temporary solution
-        List names = retrieveBookNames(verses);
+        else verses = dailyReadingsController.today();
+        List<String> names = retrieveBookNames(verses);
         model.addAttribute("verses", verses);
         model.addAttribute("names", names);
         return "daily";
     }
 
-    public List retrieveBookNames(List<Kjv> verses) {
+    public List<String> retrieveBookNames(List<Kjv> verses) {
         List<KeyEnglish> allKeys = keyEnglishTranslator.findAll();
-        List correspondingBookNames = new ArrayList<>();
+        List<String> correspondingBookNames = new ArrayList<>();
         for (int i = 0;i<verses.size();i++) {
             int finalI = i;
             List<KeyEnglish> result = allKeys.stream()
@@ -89,7 +74,7 @@ public class WebController {
         if (!isInteger) verseCount = "10";
         List<Kjv> verses = randomController.random(Integer.valueOf(verseCount));
 
-        List names = retrieveBookNames(verses);
+        List<String> names = retrieveBookNames(verses);
         model.addAttribute("verses", verses);
         model.addAttribute("names", names);
         return "random";
@@ -97,7 +82,9 @@ public class WebController {
     static boolean isInt(String s)
     {
         try
-        { int i = Integer.parseInt(s); return true; }
+        {
+            Integer.parseInt(s);
+            return true; }
 
         catch(NumberFormatException er)
         { return false; }

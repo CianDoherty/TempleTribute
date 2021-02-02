@@ -14,7 +14,7 @@ public class RandomController {
     @Autowired
     RandomService randomService;
 
-    @GetMapping("/search") // work on default values
+    @GetMapping("/search")
     public ResponseEntity<String> search(@RequestParam(name = "book", defaultValue = "de4e12af7f28f599-01") String book,
                                          @RequestParam(name="chapter", defaultValue = "") String chapter,
                                          @RequestParam(name="verse", defaultValue = "10") String verse) {
@@ -23,11 +23,7 @@ public class RandomController {
 
     @RequestMapping("/verse")
     public List<Kjv> random(@RequestParam(name="length", defaultValue = "10") int length) {
-//        model.addAttribute("appName", appName);
         return randomService.searchRandom(length);
     }
-
-//    @GetMapping("/count")
-//    public Long count() {return randomService.count();}
 
 }

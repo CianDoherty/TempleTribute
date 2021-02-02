@@ -1,7 +1,6 @@
 package com.lunatech.bible.repository;
 
 import com.lunatech.bible.model.KeyEnglish;
-import com.lunatech.bible.model.Kjv;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -20,7 +19,7 @@ public class KeyEnglishTranslator {
 
     public List<KeyEnglish> findAll() {
         TypedQuery<KeyEnglish> queryKeyEnglish = entityManager.createNamedQuery("findAllQry", KeyEnglish.class);
-        List<KeyEnglish> responseList = (List<KeyEnglish>)queryKeyEnglish.getResultList();
+        List<KeyEnglish> responseList = queryKeyEnglish.getResultList();
         return responseList;
     }
 }

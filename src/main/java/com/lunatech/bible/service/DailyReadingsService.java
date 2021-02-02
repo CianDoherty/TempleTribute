@@ -2,13 +2,10 @@ package com.lunatech.bible.service;
 
 import com.lunatech.bible.model.Kjv;
 import com.lunatech.bible.repository.DailyReadingsRepository;
-import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 
@@ -23,13 +20,13 @@ public class DailyReadingsService {
         this.dailyReadingsRepository = dailyReadingsRepository;
     }
 
-    public List<Kjv> readingToday(String book) throws JSONException, SQLException, IOException {
-        return dailyReadingsRepository.retrieveTodaysReading(book);
+    public List<Kjv> readingToday() {
+        return dailyReadingsRepository.retrieveTodaysReading();
     }
-    public List<Kjv> readingTomorrow() throws IOException {
+    public List<Kjv> readingTomorrow()  {
         return dailyReadingsRepository.retrieveTomorrowsReading();
     }
-    public List<Kjv> readingYesterday() throws IOException {
+    public List<Kjv> readingYesterday()  {
         return dailyReadingsRepository.retrieveYesterdaysReading();
     }
 }
